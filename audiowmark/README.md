@@ -80,3 +80,5 @@ track_wm.wav \
 0123456789abcdef0011223344556677
 ```
 
+TBD whether reasonable expectation to be visibly evident in spectrogram
+<img src="img/20241119173055_spectrogram1.png" alt="drawing" width="900"/>
