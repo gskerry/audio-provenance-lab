@@ -15,4 +15,4 @@ RUN make install
 VOLUME ["/data"]
 WORKDIR /data
 
-ENTRYPOINT ["/usr/local/bin/audiowmark"]
+# ENTRYPOINT ["/usr/local/bin/audiowmark"]
