@@ -1,3 +1,3 @@
 # Audio Provenance: Research Lab
 
-- a documented rabbithole on digital audio watermarking and fingerprinting.
+- Monorepo documenting rabbithole on digital audio watermarking and fingerprinting.
