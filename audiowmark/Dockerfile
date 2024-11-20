@@ -8,7 +8,7 @@ RUN apt-get update && apt-get install -y \
 ADD . /audiowmark
 WORKDIR /audiowmark
 
-RUN ./autogen.sh
+RUN ./configure
 RUN make
 RUN make install
 
