@@ -36,14 +36,6 @@ One of the more actively-used open source libraries for audio fingerprinting in 
 <br>
 <br>
 
-- python dev environemnt via Vagrant/Virtualbox
-- pyacoustid install / config
-- basic fingerprinting
-- submission to Acoustid (optional)
-
-<br>
-<br>
-
 # Environment Setup
 
 **dependencies**
@@ -85,7 +77,6 @@ cd path/to/sync/folder
 ./vm-provision.sh
 ```
 
-<br>
 <br>
 
 ## re: Chromaprint
