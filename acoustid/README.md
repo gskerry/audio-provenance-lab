@@ -84,6 +84,9 @@ cd path/to/sync/folder
 - Documentation around library a bit hard to decipher. 
 - Release builds are [maintained on github](https://github.com/acoustid/chromaprint/releases)
 - the payload is a compiled `fpcalc`
+
+<img src="img/chromaprint_release.png" alt="drawing" width="700"/>
+
 - Scant install instructions... added to `$PATH`
 - However, use with `fpcalc.py` resulted in a dependency error, tracing back to `libchromaprint`
 ```shell
@@ -102,3 +105,4 @@ raise ImportError("couldn't find libchromaprint")
 cd pyacoustid-1.3.0
 python fpcalc.py audio.mp3
 ```
+<img src="img/fingerprint.png" alt="drawing" width="900"/>
