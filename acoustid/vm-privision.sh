@@ -23,6 +23,7 @@ pip install --upgrade pip
 ## pyacoustid install
 
 # (note) Vagrant/VB machines tend to have under-resourced /tmp directories -> failed pip installs 
+# https://askubuntu.com/questions/1326304/cannot-install-pip-module-because-there-is-no-space-left-on-device
 # Create tmp directory within home. Avoids reconfiguration of virtualbox machine (VBoxManage learning curve, etc)
 
 mkdir /home/vagrant/tmp
