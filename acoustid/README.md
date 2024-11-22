@@ -9,6 +9,9 @@ One of the more actively-used open source libraries for audio fingerprinting in 
 - Of note, DistroKid's distrolock product [appears to use AcoustID fingerprints](https://support.distrokid.com/hc/en-us/articles/360024829334-What-is-DistroLock), in combination with Audible Magic monitoring service. 
     - Not fully clear whether implication is that Audible Magic uses same fingerprinting protocol
 
+- It is also the primary fingerprinting utility for the MusicBrainz project:
+    - https://wiki.musicbrainz.org/Fingerprinting
+
 <br>
 
 **AcoustID project**
@@ -16,6 +19,10 @@ One of the more actively-used open source libraries for audio fingerprinting in 
     - https://acoustid.org/chromaprint
         - https://github.com/acoustid/chromaprint
     - https://acoustid.org/webservice
+
+- There is additionally a python utility pyacoustid (which is used here)
+    - https://github.com/beetbox/pyacoustid
+    - https://pypi.org/project/pyacoustid
 
 **Additional Reading**
 - https://oxygene.sk/2011/01/how-does-chromaprint-work
@@ -39,3 +46,39 @@ One of the more actively-used open source libraries for audio fingerprinting in 
 
 # Environment Setup
 
+As I have come to conclude that the [headaches around python package and environment management](https://hackernoon.com/setting-up-a-python-dev-environment-in-2024) are not my imagination, I gravitate towards using a sandbox VM.
+
+- https://developer.hashicorp.com/vagrant/tutorials/getting-started
+- https://wiki.manjaro.org/index.php/VirtualBox
+
+(This admitedly comes at the cost of DevOps overhead. One could argue this is more a one-time, up front cost. Feel free to choose your own adventure.)
+
+- Little modification to Vagrantfile required.
+    - select base VM OS
+    - enable shared/sync folder to the Host.
+
+- Spin up machine
+```shell
+vagrant init
+# edit Vagrantfile
+vagrant reload
+cp vm-provision.sh /path/to/sync/folder
+vagrant up
+vagrant ssh
+```
+- Inside VM, run provisioning step (or script)
+```
+cd path/to/sync/folder
+./vm-provision.sh
+```
+
+<br>
+<br>
+
+# Basic Fingerprinting
+
+```shell
+cd pyacoustid-1.3.0
+```
+
+- I did encounter issues with the chromaprint install
