@@ -13,5 +13,5 @@ add \
 --strength 11 \
 --key 2024-ILI.key \
 song.wav \
-song_.wav \
+song_wm.wav \
 $MSG
