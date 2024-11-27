@@ -36,73 +36,87 @@ One of the more actively-used open source libraries for audio fingerprinting in 
 <br>
 <br>
 
-# Environment Setup
+# VM environment (optional)
 
-**dependencies**
-- `python`
-- `pip`
-- (python venv)
-    - e.g. in Arch environments pip installs will result in `externally-managed-environment` errors, unless utilizing a python environment manager
-- `chromaprint`
-    - Note below re: considerations installing from source vs 
+[Sandbox python environment](https://hackernoon.com/setting-up-a-python-dev-environment-in-2024) as desired. (Optional)
 
-
-## VM approach (optional)
-
-As I have come to conclude that the [headaches around python package and environment management](https://hackernoon.com/setting-up-a-python-dev-environment-in-2024) are not my imagination, I gravitate towards using a sandbox VM.
 
 - https://developer.hashicorp.com/vagrant/tutorials/getting-started
-- https://wiki.manjaro.org/index.php/VirtualBox
+    - example `Vagrantfile` included
+- See: https://wiki.manjaro.org/index.php/VirtualBox
+    - Consult guidance for your given OS
 
-(This admitedly comes at the cost of DevOps overhead. One could argue this is more a one-time, up front cost. Feel free to choose your own adventure.)
-
-- Little modification to Vagrantfile required.
-    - select base VM OS
-    - enable shared/sync folder to the Host.
 
 - Spin up machine
+
 ```shell
 vagrant init
 # edit Vagrantfile
 vagrant reload
-cp vm-provision.sh /path/to/sync/folder
-vagrant up
-# if encountering issues
-# vagrant up --debug
+vagrant up # --debug
 vagrant ssh
 ```
-- Inside VM, run provisioning step (or script)
-```
-cd path/to/sync/folder
-./vm-provision.sh
-```
+
+- Proivision VM environment (consult `vm-provision.sh`)
 
 <br>
+<br>
 
-## re: Chromaprint
-
-- Documentation around library a bit hard to decipher. 
-- Release builds are [maintained on github](https://github.com/acoustid/chromaprint/releases)
-- the payload is a compiled `fpcalc`
-
-<img src="img/chromaprint_release.png" alt="drawing" width="700"/>
-
-- Scant install instructions... added to `$PATH`
-- However, use with `fpcalc.py` resulted in a dependency error, tracing back to `libchromaprint`
-```shell
-raise ImportError("couldn't find libchromaprint")
-```
-- resolved by installing Arch distribution's chromaprint package 
+# Installation
+- instructions included for building from source (consult `vm-provision.sh`)
+    - https://github.com/acoustid/chromaprint/releases
+    - (I encountered build issues between ffmpeg v7 and chromaprint 1.5.1)
+- A number of distros also provide chromaprint
 
 <br>
 <br>
 
 # Basic Fingerprinting
 
-- With install and config successfully completed, fingerprint generation is straightforward
+Fingerprint generation is straightforward, utilizing `fpcalc` utility
+
+```shell
+fpcalc audio.mp3
+```
+<img src="img/fingerprint.png" alt="drawing" width="900"/>
+
+<br>
+
+Submitting or checking fingerprints against the acoustid.org database can utilize the available [web services http API](https://acoustid.org/webservice).
+
+```shell
+curl https://api.acoustid.org/v2/submit?client=i7pseZuW1Ac&user=XXX&&duration.0=641&fingerprint.0=XXX
+```
+
+- Note: API calls require both an application (client) API key as well as a user API key. Both can be obtained via https://acoustid.org
+
+- Further automation around fingerprinting and API calls can be shell scripted, or utilize the `pyacoustid` as below, which includes bindings for both fpcalc and for the acoustid web services.
+
+<br>
+<br>
+
+
+# pyacoustid
+
+https://github.com/beetbox/pyacoustid
+
+**dependencies**
+- `chromaprint`
+- `python`
+- `pip`
+- (python venv)
+
+Consult `vm-provision.sh` on installation steps
+
+Scripted fingerprinting and querying functions be then be built utilizing the pythong bindings
+
+```python
+import acoustid
+for score, recording_id, title, artist in acoustid.match(apikey, path):
+# etc
+```
 
 ```shell
 cd pyacoustid-1.3.0
 python fpcalc.py audio.mp3
 ```
-<img src="img/fingerprint.png" alt="drawing" width="900"/>
