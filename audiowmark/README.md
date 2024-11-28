@@ -7,22 +7,26 @@
 <br>
 <br>
 
-# note re: Install (arch)
+# Build from Source
+
+- todo
+
+<br>
+<br>
+
+# Docker
 
 ```shell
 pacman -S zstd
 
-wget --show-progress https://github.com/swesterfeld/audiowmark/releases/download/0.6.2/audiowmark-0.6.2.tar.zst
+wget https://github.com/swesterfeld/audiowmark/releases/download/0.6.2/audiowmark-0.6.2.tar.zst
 
 tar --zstd -xvf audiowmark-0.6.2.tar.zst
 ```
 
 <br>
-<br>
 
-# note re: docker build
-
-If planning to use Docker and pulling from stable release repos, will need to revert autogen script back to configure.
+NOTE: If downloading from stable release repos (opposed to `git pull`), you may need to revert autogen script back to configure.
 
 ```dockerfile
 # RUN ./autogen.sh
@@ -32,11 +36,12 @@ RUN ./configure
 ```shell
 docker build -t audiowmark .
 ```
-
 <br>
+
+## Interative shell
+
 Entrypoint can be removed if desiring a fully interactive shell on the container (i.e. real-time scripting etc inside the box)
 
-<br>
 
 ```dockerfile
 # ENTRYPOINT ["/usr/local/bin/audiowmark"]
@@ -47,14 +52,12 @@ docker build -t audiowmark-i .
 docker run -v <local-data-directory>:/data --rm -it
 ```
 
-
-
 <br>
 <br>
 
 # note re: supported codecs
 
-AFAIK, only wav is supported. Attempting with .mp3 resulted in a unexpected EOF error:
+Appears only wav is supported. Attempting with .mp3 resulted in a unexpected EOF error:
 
 `audiowmark: warning: unexpected EOF; input frames != output frames`
 
@@ -69,16 +72,32 @@ ffmpeg -i inputfile.flac output.wav
 
 # Adding Watermark
 
+## Generating Key
+
+- see `awm_genkey.sh`
+- as documented [here](https://uplex.de/audiowmark/README.html#key)
+- ultimately integrated [into the sampling algorithm](https://code.uplex.de/stefan/audiowmark/blob/master/src/wmadd.cc#L692) to randomize the resulting mark 
+
+## strength parameter
+
+- as documented [here](https://uplex.de/audiowmark/README.html#strength)
+- [influences magnification / frame size for FFT](https://code.uplex.de/stefan/audiowmark/blob/master/src/wmadd.cc#L78)
+    - todo...
+
+<br>
+
 ```shell
 docker run \
--v $AudiowmarkDockerShare:/data \
+-v $DockerHostShareDir:/data \
 --rm \
 -i audiowmark \
 add \
-track.wav \
-track_wm.wav \
-0123456789abcdef0011223344556677
+--strength 11 \
+--key keyfile.key \
+song.wav \
+song_wm.wav \
+<WatermarkHash>
 ```
-
-TBD whether reasonable expectation to be visibly evident in spectrogram
+<br>
+TODO: reasonable expectation to be visibly evident in spectrogram?
 <img src="img/20241119173055_spectrogram1.png" alt="drawing" width="900"/>
